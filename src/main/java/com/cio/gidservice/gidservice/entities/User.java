@@ -3,7 +3,6 @@ package com.cio.gidservice.gidservice.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.persistence.*;
 
@@ -18,9 +17,7 @@ public class User {
     private String phoneNumber;
     private String password;
     private UserType userType;
+    private String name;
 
-    public User(@NonNull User user) {
-
-    }
 }
 

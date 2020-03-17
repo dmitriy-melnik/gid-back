@@ -11,6 +11,6 @@ public class RegistrationService {
     private UserRepository userRepository;
 
     public User getUserByPhone(String phone) {
-        return userRepository.getUserByPhoneNumber(phone);
+        return userRepository.findByPhoneNumber(phone);
     }
 }

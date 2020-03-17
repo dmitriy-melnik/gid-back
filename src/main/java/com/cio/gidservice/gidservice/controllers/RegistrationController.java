@@ -13,6 +13,7 @@ public class RegistrationController {
 
     @GetMapping("/auth")
     public User checkUserByPhone(@RequestBody User user) {
+        System.out.println(user);
         User user1 = regService.getUserByPhone(user.getPhoneNumber());
         if (user.getPassword().equals(user1.getPassword())) {
             return regService.getUserByPhone(user.getPhoneNumber());
