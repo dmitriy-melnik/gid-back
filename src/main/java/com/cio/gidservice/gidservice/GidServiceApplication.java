@@ -10,7 +10,4 @@ public class GidServiceApplication {
         SpringApplication.run(GidServiceApplication.class, args);
     }
 
-    /**
-     * Многострочные коментарии - лучшее, что создало человечество!
-     */
 }
