@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ServicesRepository extends JpaRepository<Service, Long> {
     List<Service> findAllByEstablishment_Name(String s);
-    List<Service> findServicesByDescriptionContainingOrNameContains(String s1, String s2);
+    List<Service> findServicesByDescriptionContainingOrNameContaining(String s1, String s2);
 }
 

@@ -39,12 +39,13 @@ public class EstablishmentController {
     }
 
     @GetMapping("/getAllByEstablishment")
-    public List<Service> getAllByEstablishment(@RequestParam(value = "name") String name) {
+    public List<Service> getAllByEstablishment(@RequestParam String name) {
         return establishmentService.getAllServicesByEstablishment(name);
     }
 
     @GetMapping("/findServicesByWord")
-    public List<Service> getAllServicesByWords(@RequestBody String keyword) {
+    public List<Service> getAllServicesByWords(@RequestParam String keyword) {
+        System.out.println(keyword);
         return establishmentService.findAllServicesByKeyword(keyword);
     }
 }

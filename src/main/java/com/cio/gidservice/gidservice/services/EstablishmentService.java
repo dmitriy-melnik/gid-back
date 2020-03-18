@@ -46,7 +46,7 @@ public class EstablishmentService {
     }
 
     public List<com.cio.gidservice.gidservice.entities.Service> findAllServicesByKeyword(String keyword){
-        return servicesRepository.findServicesByDescriptionContainingOrNameContains(keyword, keyword);
+        return servicesRepository.findServicesByDescriptionContainingOrNameContaining(keyword, keyword);
     }
 
 }
