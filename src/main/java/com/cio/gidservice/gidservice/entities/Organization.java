@@ -1,20 +1,19 @@
 package com.cio.gidservice.gidservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="establishment")
+@Table(name="organization")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Establishment {
+public class Organization {
 
     // Основные поля сущности Заведение
     @Id
@@ -24,16 +23,18 @@ public class Establishment {
     private String description;
     private Float rating;
 
-    @OneToOne(mappedBy = "establishment")
+    @OneToOne(mappedBy = "organization")
     private Location location;
 
     //Связь между заведением и услугами
-    @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
     private List<Service> services;
 
-    public void addService(Service service) {
-        services.add(service);
-    }
+    //Связь с пользователем, которому заведение принадлежит
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User user;
 
     /*
     * TODO:

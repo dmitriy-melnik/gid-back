@@ -2,10 +2,9 @@ package com.cio.gidservice.gidservice.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.postgresql.util.PGmoney;
+import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 
@@ -22,14 +21,14 @@ public class Service {
     private Long id;
     private String name;
     private String description;
-    private PGmoney price;
     private Integer leadTime; //minutes
+    private Float price;
 
     //Связь с заведением
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "establishment_id", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = false)
     @JsonIgnore
-    private Establishment establishment;
+    private Organization organization;
 
     /*
     * TODO:

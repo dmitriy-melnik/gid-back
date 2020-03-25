@@ -15,8 +15,8 @@ public class Location {
     private Double longitude;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "establishment_id", referencedColumnName = "id")
+    @JoinColumn(name = "organization_id", referencedColumnName = "id")
     @JsonIgnore
-    private Establishment establishment;
+    private Organization organization;
 
 }
