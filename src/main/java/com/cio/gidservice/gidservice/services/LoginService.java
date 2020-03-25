@@ -6,8 +6,6 @@ import com.cio.gidservice.gidservice.repositories.LogsRepository;
 import com.cio.gidservice.gidservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
 import java.time.LocalDateTime;
 
 @Service
@@ -22,16 +20,21 @@ public class LoginService {
         logsRepository.deleteAllByUserID(userID);
     }
 
-    public boolean trySignIn(Logs logs) {
+    public Long trySignIn(Logs logs) {
         try{
             User user = userRepository.getOne(logs.getUserID());
             if(user.getPassword().equals(logs.getPassword())){
                 logs.setTime(LocalDateTime.now());
                 logsRepository.save(logs);
-                return true;
+                return user.getId();
             }
+            return null;
         } catch (Exception e) {
-
+            return null;
         }
+    }
+
+    public Long register(User user) {
+
     }
 }
