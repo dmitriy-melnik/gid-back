@@ -1,17 +1,23 @@
 package com.cio.gidservice.gidservice.services;
 
-import com.cio.gidservice.gidservice.entities.*;
+import com.cio.gidservice.gidservice.entities.databaseEntities.Organization;
+import com.cio.gidservice.gidservice.entities.databaseEntities.User;
+import com.cio.gidservice.gidservice.entities.requestEntities.OrganizationRequestEntity;
+import com.cio.gidservice.gidservice.entities.requestEntities.ServiceRequestEntity;
+import com.cio.gidservice.gidservice.errors.LoginException;
 import com.cio.gidservice.gidservice.errors.NonAuthorizedAccess;
 import com.cio.gidservice.gidservice.repositories.LogsRepository;
 import com.cio.gidservice.gidservice.repositories.OrganizationRepository;
 import com.cio.gidservice.gidservice.repositories.ServicesRepository;
 import com.cio.gidservice.gidservice.repositories.UserRepository;
-import org.apache.catalina.authenticator.NonLoginAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ *
+ */
 @Service
 public class OrganizationService {
 
@@ -40,31 +46,38 @@ public class OrganizationService {
         return organizationRepository.findOrganizationByDescriptionContains(keyword);
     }
 
-    public void addServiceToOrganization(com.cio.gidservice.gidservice.entities.Service service, String organizationName) {
-        /*Organization organization = findOrganization(organizationName);
-        //service.setOrganization(organization);*/
-        servicesRepository.save(service);
+    public Long addServiceToOrganization(ServiceRequestEntity service) {
+        Organization organization = organizationRepository.getOne(service.getOrganizationID());
+        service.setOrganization(organization);
+        com.cio.gidservice.gidservice.entities.databaseEntities.Service service1 = new com.cio.gidservice.gidservice.entities.databaseEntities.Service(service);
+        return servicesRepository.save(service1).getId();
     }
 
-    public void addOrganization(Long user_id, Organization organization) {
-        //if(logsRepository.existsLogsByUser_id(user_id)) {
+    /**
+     * Метод добавляет организацию в БД. Сперва идет поиск User для которого добавляется организация.
+     * После этого найденый пользователь присваивается организации, и она идет в БД.
+     * @param user_id - id пользователя для которого добавляется организация
+     * @param organization - модифицированный объект организации, которая добавляется
+     */
+    public void addOrganization(Long user_id, OrganizationRequestEntity organization) throws LoginException {
+        boolean sessionExists = logsRepository.existsLogsByUserIDAndIpEquals(user_id, organization.getIp());
+        if(sessionExists) {
+            Organization forSave = new Organization(organization);
             User user = userRepository.getOne(user_id);
-            user.addOrganization(organization);
-            organization.setUser(user);
-            organizationRepository.save(organization);
-        //}
+            forSave.setUser(user);
+            user.addOrganization(forSave);
+            organizationRepository.save(forSave);
+        } else {
+            throw new LoginException("User not logged in the system!");
+        }
     }
 
-    public List<com.cio.gidservice.gidservice.entities.Service> getAllServicesByOrganization(Long id) {
+    public List<com.cio.gidservice.gidservice.entities.databaseEntities.Service> getAllServicesByOrganization(Long id) {
         return servicesRepository.findAllByOrganizationId(id);
     }
 
     public List<Organization> getAll() {
         return organizationRepository.findAll();
-    }
-
-    public List<com.cio.gidservice.gidservice.entities.Service> findAllServicesByKeyword(String keyword){
-        return servicesRepository.findServicesByDescriptionContainingOrNameContaining(keyword, keyword);
     }
 
 }

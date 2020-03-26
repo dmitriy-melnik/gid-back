@@ -1,5 +1,6 @@
-package com.cio.gidservice.gidservice.entities;
+package com.cio.gidservice.gidservice.entities.databaseEntities;
 
+import com.cio.gidservice.gidservice.entities.requestEntities.OrganizationRequestEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +9,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
+
+/**
+ *
+ */
 @Entity
 @Table(name="organization")
 @Data
@@ -23,8 +28,8 @@ public class Organization {
     private String description;
     private Float rating;
 
-    @OneToOne(mappedBy = "organization")
-    private Location location;
+    /*@OneToOne(mappedBy = "organization")
+    private Location location;*/
 
     //Связь между заведением и услугами
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
@@ -35,6 +40,28 @@ public class Organization {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
+
+    public Organization(OrganizationRequestEntity entity) {
+        this.description = entity.getDescription();
+        //this.location = entity.getLocation();
+        this.name = entity.getName();
+        this.rating = entity.getRating();
+        this.services = entity.getServices();
+        this.user = entity.getUser();
+    }
+
+    @Override
+    public String toString() {
+        return "Organization{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", rating=" + rating +
+                //", location=" + location +
+                ", services=" + services +
+                ", user=" + user +
+                '}';
+    }
 
     /*
     * TODO:

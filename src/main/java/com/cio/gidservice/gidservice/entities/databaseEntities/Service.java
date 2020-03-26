@@ -1,13 +1,14 @@
-package com.cio.gidservice.gidservice.entities;
+package com.cio.gidservice.gidservice.entities.databaseEntities;
 
 
+import com.cio.gidservice.gidservice.entities.requestEntities.ServiceRequestEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
 
+/**
+ *
+ */
 @Data
 @Entity
 @Table(name = "services")
@@ -29,6 +30,14 @@ public class Service {
     @JoinColumn(name = "organization_id", nullable = false)
     @JsonIgnore
     private Organization organization;
+
+    public Service(ServiceRequestEntity entity) {
+        this.name = entity.getName();
+        this.description = entity.getDescription();
+        this.leadTime = entity.getLeadTime();
+        this.organization = entity.getOrganization();
+        this.price = entity.getPrice();
+    }
 
     /*
     * TODO:
