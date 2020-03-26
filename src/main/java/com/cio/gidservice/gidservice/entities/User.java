@@ -1,5 +1,6 @@
 package com.cio.gidservice.gidservice.entities;
 
+import com.cio.gidservice.gidservice.entities.databaseEntities.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
