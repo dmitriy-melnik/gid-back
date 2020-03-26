@@ -1,8 +1,8 @@
-package com.cio.gidservice.gidservice.entities;
+package com.cio.gidservice.gidservice.entities.databaseEntities;
 
-import lombok.ToString;
-
-@ToString
+ /**
+ *
+ */
 public enum UserType {
     SIMPLE_USER,
     BUSINESS_USER,

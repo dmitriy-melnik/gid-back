@@ -1,14 +1,14 @@
-package com.cio.gidservice.gidservice.entities;
+package com.cio.gidservice.gidservice.entities.databaseEntities;
 
 
+import com.cio.gidservice.gidservice.entities.requestEntities.ServiceRequestEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.postgresql.util.PGmoney;
-
+import lombok.*;
 import javax.persistence.*;
 
+/**
+ *
+ */
 @Data
 @Entity
 @Table(name = "services")
@@ -22,14 +22,22 @@ public class Service {
     private Long id;
     private String name;
     private String description;
-    private PGmoney price;
     private Integer leadTime; //minutes
+    private Float price;
 
     //Связь с заведением
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "establishment_id", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = false)
     @JsonIgnore
-    private Establishment establishment;
+    private Organization organization;
+
+    public Service(ServiceRequestEntity entity) {
+        this.name = entity.getName();
+        this.description = entity.getDescription();
+        this.leadTime = entity.getLeadTime();
+        this.organization = entity.getOrganization();
+        this.price = entity.getPrice();
+    }
 
     /*
     * TODO:
