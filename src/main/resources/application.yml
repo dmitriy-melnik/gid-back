@@ -11,5 +11,5 @@ spring:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/GidService
     username: postgres
-    password: 12345678
+    password: 123456789
     driverClassName: org.postgresql.Driver
