@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 
@@ -23,9 +26,12 @@ public class Organization {
     // Основные поля сущности Заведение
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @PositiveOrZero
     private Long id;
+    @NotEmpty
     private String name;
     private String description;
+    @PositiveOrZero
     private Float rating;
 
     /*@OneToOne(mappedBy = "organization")

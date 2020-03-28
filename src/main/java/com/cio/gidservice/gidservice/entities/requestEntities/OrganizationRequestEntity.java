@@ -5,11 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.PositiveOrZero;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrganizationRequestEntity extends Organization {
 
+    @PositiveOrZero
     private String ip;
 
     @Override

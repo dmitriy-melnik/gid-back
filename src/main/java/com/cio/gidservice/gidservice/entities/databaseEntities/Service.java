@@ -5,6 +5,9 @@ import com.cio.gidservice.gidservice.entities.requestEntities.ServiceRequestEnti
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 /**
  *
@@ -19,10 +22,14 @@ public class Service {
     //Основные поля сущности Услуга
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @PositiveOrZero
     private Long id;
+    @NotEmpty
     private String name;
     private String description;
+    @Positive
     private Integer leadTime; //minutes
+    @Positive
     private Float price;
 
     //Связь с заведением
