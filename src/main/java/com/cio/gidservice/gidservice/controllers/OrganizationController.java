@@ -1,10 +1,9 @@
 package com.cio.gidservice.gidservice.controllers;
 
-import com.cio.gidservice.gidservice.entities.databaseEntities.Organization;
-import com.cio.gidservice.gidservice.entities.requestEntities.OrganizationRequestEntity;
-import com.cio.gidservice.gidservice.entities.requestEntities.ServiceRequestEntity;
-import com.cio.gidservice.gidservice.errors.LoginException;
-import com.cio.gidservice.gidservice.errors.NonAuthorizedAccess;
+import com.cio.gidservice.gidservice.dto.OperationRequestDto;
+import com.cio.gidservice.gidservice.dto.OrganizationRequestDto;
+import com.cio.gidservice.gidservice.model.Operation;
+import com.cio.gidservice.gidservice.model.Organization;
 import com.cio.gidservice.gidservice.services.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,60 +12,48 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * REST-controller for manipulation with organizations and their services.
- * Described logic that helps User to manage his organizations and services owned by Organization.
- * @author Yuriy Surzhikov
- * @version 0.1
- */
 @RestController
-@RequestMapping("/organization")
+@RequestMapping("/organizations")
 public class OrganizationController {
 
     @Autowired
     private OrganizationService organizationService;
 
-
-    @GetMapping("/{user_id}/getAllOrganization")
-    public List<Organization> getAllForUser(@PathVariable(value = "user_id") Long user_id,
-                                            @RequestBody String ip){
-
-        try{
-            return organizationService.findAllByUserId(user_id);
-        } catch (NonAuthorizedAccess nonAuthorizedAccess) {
-            return null;
-        }
+    @PostMapping("/addOrganization")
+    public ResponseEntity<?> addEntity(@RequestBody OrganizationRequestDto organizationDto) {
+        Organization organization = new Organization();
+        organization.setOrganization_id(organizationDto.organization_id);
+        organization.setName(organizationDto.name);
+        organization.setPhoneNumber(organizationDto.getPhoneNumber());
+        organization.setEmail(organizationDto.getEmail());
+        organization.setDescription(organizationDto.getDescription());
+        organization.setRating(organization.getRating());
+        organizationService.addOrganization(organization);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/{user_id}/addOrganization")
-    public ResponseEntity<?> addEntity(@PathVariable Long user_id,
-                                       @RequestBody OrganizationRequestEntity organization) {
-        try {
-            organizationService.addOrganization(user_id, organization);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (LoginException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        }
+    @GetMapping("/getAllOrganizations")
+    public List<Organization> getAllOrganization() {
+        return organizationService.getAll();
     }
 
-    @PostMapping("/{user_id}/addService")
-    public ResponseEntity<?> addServiceToOrganization(@PathVariable Long user_id,
-                                                      @RequestBody ServiceRequestEntity service) {
-        try{
-            Long id = organizationService.addServiceToOrganization(service);
+    @PostMapping("/addOperation/{orr_id}")
+    public ResponseEntity<?> addServiceToOrganization(@PathVariable Long id,
+                                                      @RequestBody Operation operation) {
+
+        if (organizationService.findById(id) != null) {
+            organizationService.addOperationToOrganization(operation, id);
             return new ResponseEntity<>(id, HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntity<>("User or organization not found!", HttpStatus.NOT_FOUND);
-        }
+        } else return new ResponseEntity<>("User or organization not found!", HttpStatus.NOT_FOUND);
+
     }
 
-    @GetMapping("/{user_id}/getServices")
-    public ResponseEntity<?> getServicesByOrganization(@PathVariable String user_id,
-                                                       @RequestParam(value = "org_id") Long orgId) {
+    @GetMapping("/getOperationsByOrganization/{org_id}")
+    public  ResponseEntity<?> getAllServicesByOrganization(@PathVariable Long orgId) {
         try{
-            return new ResponseEntity<>(organizationService.getAllServicesByOrganization(orgId), HttpStatus.OK);
+            return new ResponseEntity<>(organizationService.getAllOperationsByOrganization(orgId), HttpStatus.OK);
         } catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 }
